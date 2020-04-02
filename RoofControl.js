@@ -42,7 +42,7 @@ var RoofControl = RoofControl || (function () {
             state['RoofControl'].useAura2 = state['SIMPLEROOFCONTROL'].useAura2;
             state['RoofControl'].lockPos = state['SIMPLEROOFCONTROL'].lockPos;
             state['RoofControl'].gmOnly = state['SIMPLEROOFCONTROL'].gmOnly;
-            state['RoofControl'].lockedTokens = state['SIMPLEROOFCONTROL'].lockedTokens;
+            state['RoofControl'].lockedTokens = _.uniq(state['SIMPLEROOFCONTROL'].lockedTokens);
         }
         _.each(state['RoofControl'].lockedTokens, function (id) {
             var token = getObj('graphic', id);
@@ -86,7 +86,10 @@ var RoofControl = RoofControl || (function () {
                             showHelp();
                             break;
                         case "unlock":
-                            unlockRoof(msg.selected);
+                            unlockRoofTokens(msg.selected);
+                            break;
+                        case "lock":
+                            lockRoofTokens(msg.selected);
                             break;
                     }
                 }
@@ -175,6 +178,7 @@ var RoofControl = RoofControl || (function () {
                     state['RoofControl'].lockedTokens.push(roof.get('id'));
                 }
             });
+            state['RoofControl'].lockedTokens = _.uniq(state['RoofControl'].lockedTokens);
 
             anchor.set(roofAnchorParms);
             anchor.set({bar2_value: roof_ids.join()});
@@ -226,7 +230,7 @@ var RoofControl = RoofControl || (function () {
                         var dest = roof.get('bar1_max').toLowerCase();
                         if (dest !== 'map') dest = 'objects';
                         roof.set({layer: ((roof.get('layer') !== 'walls') ? 'walls' : dest)});
-                        if (roof.get('layer') === 'objects') toFront(roof);
+                        toFront(roof);
                     }
                 });
             });
@@ -301,19 +305,26 @@ var RoofControl = RoofControl || (function () {
         }
     },
 
-    unlockRoof = function (selected) {
+    unlockRoofTokens = function (selected) {
         if (selected && _.size(selected) > 0) {
-            var roof = getObj('graphic', selected[0]._id);
-            if (roof) {
-                var name = (state['RoofControl'].allowLabels && roof.get('name') != '') ? ' "' + roof.get('name') + '"' : '';
-                state['RoofControl'].lockedTokens = _.reject(state['RoofControl'].lockedTokens, function (x) { return x == roof.get('id'); });
-                showDialog('Roof Unlocked', 'Roof token' + name + ' is now unlocked.');
-            } else {
-                showDialog('Unlock Error', 'Not a valid token.');
-            }
-        } else {
-            showDialog('Unlock Error', 'No tokens were selected.');
-        }
+            var anchor = getObj('graphic', selected[0]._id);
+            if (anchor && anchor.get('bar1_value') == 'RoofAnchor') {
+                var size = _.size(anchor.get('bar2_value').split(','));
+                state['RoofControl'].lockedTokens = _.difference(state['RoofControl'].lockedTokens, anchor.get('bar2_value').split(','));
+                showDialog('Unlocked', (size == 1 ? '1 Roof token has' : size + ' Roof tokens have') + ' been unlocked.');
+            } else showDialog('Unlock Error', 'Not a valid RoofAnchor token.');
+        } else showDialog('Unlock Error', 'No tokens were selected.');
+    },
+
+    lockRoofTokens = function (selected) {
+        if (selected && _.size(selected) > 0) {
+            var anchor = getObj('graphic', selected[0]._id);
+            if (anchor && anchor.get('bar1_value') == 'RoofAnchor') {
+                var roofs = anchor.get('bar2_value').split(',');
+                _.each(roofs, function (roof_id) { state['RoofControl'].lockedTokens.push(roof_id) });
+                showDialog('Locked', (_.size(roofs) == 1 ? '1 Roof token has' : _.size(roofs) + ' Roof tokens have') + ' been unlocked.');
+            } else showDialog('Locked Error', 'Not a valid RoofAnchor token.');
+        } else showDialog('Locked Error', 'No tokens were selected.');
     },
 
     getContrastColor = function (color) {

@@ -20,6 +20,7 @@ To prepare a roof for use with the script follow the directions below:
 5. Place a token somewhere near the roof/building. This can be a transparent graphic, a bush, whatever. Try to place it somewhere it will remain unobstructed by other tokens.
 6. Enter **"RoofAnchor"** (yes the R and A need to be capitalized) into the first Bar 1 field.
 7. With all tokens from above selected, type `!roof link` in chat to link the tokens. The RoofAnchor token will be given a GM-only aura to distinguish it as your roof anchor (see [Configuration](#configuration) below).
+8. _Do not change the Bar 1 field values!_ These are still used to identify the tokens.
 
 ## How to Use
 Once you have your Roof(s) setup, you select one or more RoofAnchor tokens and use the following command:
@@ -52,7 +53,9 @@ Note: Sending token IDs will cause any selected tokens to be ignored.
 You can enter the Config Menu by sending `!roof config` in the chat. This dialog gives access to changing the following options:
 * **Anchor Color** is the hexadecimal value of the aura applied to the RoofAnchor token. You may change this color to any valid hexadecimal color you wish using the button provided.
 * **Aura** is the aura field to be used on the RoofAnchor token. If you are using your tokens' Aura 1 for a different purpose or another script is using them, you may change the Aura setting to use Aura 1 instead. To do this, just click the button provided.
-* **Position Locking** allows you to lock the position, size and rotation of a Roof token whenever you link it with its RoofAnchor. This can be helpful on a crowded map or if there is a tendency to drag the wrong tokens. _This does not lock the RoofAnchor token._ Roofs linked with position locking turned on will remain locked after this feature is disabled, so if you wish to unlock a roof token, send `!roof unlock` with the RoofAnchor token selected. This unlocks **all** roof tokens associated with that anchor.
+* **Position Locking** allows you to lock the position, size and rotation of a Roof token whenever you link it with its RoofAnchor. This can be helpful on a crowded map or if there is a tendency to drag the wrong tokens. _This does not lock the RoofAnchor token._
+   Roofs linked with position locking turned on will remain locked after this feature is disabled, so if you wish to unlock a roof token, send `!roof unlock` with the RoofAnchor token selected. This unlocks **all** roof tokens associated with that anchor.
+   If you wish to lock Roof tokens for old Roofs or after unlocking them, select the corresponding RoofAnchor token and send `!roof lock` in chat.
 * **GM Only** allows you to give players access to the `!roof flip` command. This allows more flexibility and creativity with the script, like creating player macros to let them change their environment.
 
 ## In-Chat Help
