@@ -12,7 +12,7 @@ Like this script? Become a patron:
 var RoofControl = RoofControl || (function () {
     'use strict';
 
-    var version = '1.0',
+    var version = '1.1',
     debugMode = false,
     RoofParts = {},
     styles = {
