@@ -1,9 +1,8 @@
 # RoofControl
-> **NOTE:** This script is intended to replace SimpleRoofControl. It will still accept the old !ShowHideRoof command with all of its parameters for roofs created with the old script, but you must use the new commands to create and use new roofs. When replacing SimpleRoofControl with this script, it will automatically migrate your configuration settings and all locked tokens. **Do not** use both scripts together.
 
-This [Roll20](http://roll20.net/) script is a roof "lifting" system to show/hide rooms or entire houses. Buildings with multiple roof graphics, or the roofs of multiple buildings, can be controlled by a single anchor token. You have the option to turn Dynamic Lighting and/or Advanced Fog of War on or off so you can have those features enabled only inside the building(s).
+This [Roll20](http://roll20.net/) script is a roof "lifting" system to show/hide rooms or entire houses. Buildings with multiple roof graphics, or the roofs of multiple buildings, can be controlled by a single anchor token. You have the option to turn Dynamic Lighting and/or Advanced Fog of War on or off so you can have those features enabled only inside the building(s). You can optionally lock the position of the roof to prevent accidental moving or resizing.
 
-You can also designate a graphic to be placed on the map layer to broaden the functionality of the script. For instance, you can now hide a pit trap that gets revealed (moved to the map layer) which allows the player tokens to remain visible. (By default, Roofs - tokens revealed on the token layer - are automatically sent to the top to hide all graphics below it.) You can optionally lock the position of the roof to prevent accidental moving or resizing.
+You can also use RoofControl to manually trigger traps. For instance, you can now hide a pit trap that gets revealed on the map layer (allowing the character tokens to remain visible) and display the trap effect in chat for players. This effect can be either a roll template or regular text, and will only be displayed when showing the Roof token(s).
 
 ## Commands
 * **!roof link**
@@ -15,12 +14,14 @@ You can also designate a graphic to be placed on the map layer to broaden the fu
 To prepare a roof for use with the script follow the directions below:
 1. Verify you're on the *Objects & Tokens Layer*.
 2. Place all "Roof" graphics and size/position them to your needs. If you have [position locking](#configuration) on, you won't be able to adjust this later.
-3. Enter **"Roof"** (capitalization counts!) into the first Bar 1 field of each "Roof" regardless of the layer you wish to show it on.
-4. If the "Roof" graphic is to be revealed on the map layer, enter **"map"** into the second Bar 1 field.
-5. Place a token somewhere near the roof/building. This can be a transparent graphic, a bush, whatever. Try to place it somewhere it will remain unobstructed by other tokens.
-6. Enter **"RoofAnchor"** (yes the R and A need to be capitalized) into the first Bar 1 field.
-7. With all tokens from above selected, type `!roof link` in chat to link the tokens. The RoofAnchor token will be given a GM-only aura to distinguish it as your roof anchor (see [Configuration](#configuration) below).
-8. _Do not change the Bar 1 field values!_ These are still used to identify the tokens.
+  1. Enter **"Roof"** (capitalization counts!) into the first Bar 1 field of each "Roof" regardless of the layer you wish to show it on.
+  2. If the "Roof" graphic is to be revealed on the map layer (beneath character tokens), enter **"map"** into the second Bar 1 field.
+3. Place a token somewhere near the "Roof" token(s). This can be a transparent graphic, a bush, whatever. Try to place it somewhere it will remain unobstructed by other tokens. This is your Anchor Token that will need to be selected when sending `!roof` commands.
+  1. Enter **"RoofAnchor"** (yes the R and A need to be capitalized) into the first Bar 1 field.
+  3. If creating a trap and wish to provide an effect in chat, enter either a [roll template](https://roll20.zendesk.com/hc/en-us/articles/360037257334-How-to-Make-Roll-Templates) or regular text in the token's GM Notes field.
+  2. If you are creating a trap effect (above) with regular text, you can give your effect a title in the second Bar 1 field. This title will be ignored when using a roll template.
+4. With all tokens from above selected, type `!roof link` in chat to link the tokens. The RoofAnchor token will be given a GM-only aura to distinguish it as your roof anchor (see [Configuration](#configuration) below).
+4. _Do not change the Bar 1 field values!_ These are used to identify the tokens.
 
 ## How to Use
 Once you have your Roof(s) setup, you select one or more RoofAnchor tokens and use the following command:

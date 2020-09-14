@@ -12,8 +12,8 @@ Like this script? Become a patron:
 var RoofControl = RoofControl || (function () {
     'use strict';
 
-    var version = '1.1',
-    debugMode = false,
+    var version = '2.0',
+    debugMode = true,
     RoofParts = {},
     styles = {
         box:  'background-color: #fff; border: 1px solid #000; padding: 6px 8px; border-radius: 6px; margin-left: -40px; margin-right: 0px;',
@@ -21,6 +21,7 @@ var RoofControl = RoofControl || (function () {
         button: 'background-color: #000; border-width: 0px; border-radius: 5px; padding: 5px 8px; color: #fff; text-align: center;',
         textButton: 'background-color: transparent; border: none; padding: 0; color: #591209; text-decoration: underline;',
         buttonWrapper: 'text-align: center; margin: 10px 0; clear: both;',
+        result: 'font-size: 1.125em; font-weight: bold; cursor: pointer; font-family: "Lucida Console", Monaco, monospace;',
         code: 'font-family: "Courier New", Courier, monospace; padding-bottom: 6px;'
     },
 
@@ -233,6 +234,22 @@ var RoofControl = RoofControl || (function () {
                         toFront(roof);
                     }
                 });
+
+                // Show contents of RoofAnchor GM Notes
+                var roofEffect = processGMNotes(anchor.get('gmnotes'));
+                if (roofEffect != '') {
+                    var diceExp, effect = _.clone(roofEffect);
+                    if (roofEffect.startsWith('&{template') && anchor.get('bar3_max') !== 'shown') sendChat('Effect', effect);
+                    else {
+                        // Check for die roll expressions
+                        while (effect.search('@') != -1) {
+                            diceExp = effect.replace(/.*\@(.+)\@.*/i, '$1');
+                            effect = effect.replace('@' + diceExp + '@', '<span style=\'' + styles.result + '\' title="Rolling ' + diceExp + '">' + rollDice(diceExp) + '</span>');
+                        }
+                        if (anchor.get('bar3_max') !== 'shown') showEffect(anchor.get('bar1_max'), effect);
+                    }
+                    anchor.set({bar3_max: (anchor.get('bar3_max') == 'shown' ? '' : 'shown')});
+                }
             });
         } else {
             showDialog('Error', 'No anchor tokens selected!');
@@ -305,6 +322,12 @@ var RoofControl = RoofControl || (function () {
         }
     },
 
+    showEffect = function (title, content) {
+        title = (title == '') ? '' : '<div style=\'' + styles.title + '\'>' + title + '</div>';
+        var body = '<div style=\'' + styles.box + '\'>' + title + '<div>' + content + '</div></div>';
+        sendChat('Effect', body);
+    },
+
     unlockRoofTokens = function (selected) {
         if (selected && _.size(selected) > 0) {
             var anchor = getObj('graphic', selected[0]._id);
@@ -339,6 +362,33 @@ var RoofControl = RoofControl || (function () {
         var b = parseInt(color.substr(4, 2), 16);
         var ratio = ((r * 299) + (g * 587) + (b * 114)) / 1000;
         return (ratio >= 128) ? 'black' : 'white';
+    },
+
+    processGMNotes = function (notes) {
+        var retval, text = unescape(notes).trim();
+        if (text.search('{template:') != -1) {
+            text = removeFormatting(text);
+            text = text.replace('&amp;{template', '&{template');
+        }
+        return text;
+    },
+
+    removeFormatting = function (html) {
+        html = html.replace(/<p[^>]*>/gi, '<p>').replace(/\n(<p>)?/gi, '</p><p>').replace(/<br>/gi, '</p><p>').replace(/<\/?(span|div|pre|img|code|a|b|i|h1|h2|h3|h4|h5|hr)[^>]*>/gi, '');
+        if (html != '' && /<p>.*?<\/p>/g.test(html)) {
+            html = html.match(/<p>.*?<\/p>/g).map( l => l.replace(/^<p>(.*?)<\/p>$/,'$1'));
+            html = html.join(/\n/);
+        }
+        return html;
+    },
+
+    rollDice = function (exp) {
+        exp = exp.split(/\D/gi);
+        var roll, num = (exp[0]) ? parseInt(exp[0]) : 1,
+        die = (exp[1]) ? parseInt(exp[1]) : 6,
+        plus = (exp[2]) ? parseInt(exp[2]) : 0;
+        roll = (num == 1) ? randomInteger(die) : randomInteger(die * num - (num - 1)) + (num - 1);
+        return roll + plus;
     },
 
     handleMove = function(obj, prev) {
