@@ -296,11 +296,13 @@ var RoofControl = RoofControl || (function () {
         message = 'To prepare a Roof for use with the script follow the directions below:<ol>';
         message += '<li>Verify you\'re on the <i>Objects & Tokens Layer</i>.</li>';
         message += '<li>Place all "Roof" graphics and size/position them to your needs.' + (state['RoofControl'].lockPos ? ' Once linked, your Roof tokens will be locked to prevent accidental repositioning or resizing.' : ' If you wish to lock Roof token positions, you must enable it in the config menu <i>before</i> linking your tokens.') + '</li>';
-        message += '<li>Enter **"Roof"** (capitalization counts!) into the first Bar 1 field regardless of the layer you wish to show it on.</li>';
-        message += '<li>If the "Roof" graphic is to be revealed on the map layer, enter **"map"** into the second Bar 1 field.</li>';
-        message += '<li>Place a token somewhere near the roof/building where it will remain unobstructed by other tokens.</li>';
-        message += '<li>Enter **"RoofAnchor"** (yes the R and A need to be capitalized) into the first Bar 1 field.</li>';
-        message += '<li>With all tokens from above selected, type <span style=\'' + styles.code + '\'>!roof link</span> in chat to link the tokens. The RoofAnchor token will be given a GM-only aura to distinguish it as your roof anchor.';
+        message += '<li>Enter **"Roof"** into the first Bar 1 field.</li>';
+        message += '<li>Enter **"map"** into the second Bar 1 field to send to the map layer.</li>';
+        message += '<li>Place a "RoofAnchor" token somewhere it will remain unobstructed by other tokens.</li>';
+        message += '<li>Enter **"RoofAnchor"** into the first Bar 1 field.</li>';
+        message += '<li>Enter trap or other effect into the GM Notes field, if applicable.</li>';
+        message += '<li>Enter a title for a non- roll template trap effect into the second Bar 1 field.</li>';
+        message += '<li>Select all tokens and type <span style=\'' + styles.code + '\'>!roof link</span> in chat.';
         message += '<li>If necessary, name your Roof and RoofAnchor tokens however you wish.</li>';
         message += '</ol>Do this for each "roof" needed.<br><br>Send <span style=\'' + styles.code + '\'>!roof flip</span> in chat with the RoofAnchor selected to show/hide the Roof token(s).<br><br>';
         message += 'Use <span style=\'' + styles.code + '\'>!roof flip [dl|fow]-[on|off|toggle]</span> to affect Dynamic Lighting and Advanced Fog of War.';
