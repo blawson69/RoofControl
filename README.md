@@ -14,14 +14,14 @@ You can also use RoofControl to manually trigger traps. For instance, you can no
 To prepare a roof for use with the script follow the directions below:
 1. Verify you're on the *Objects & Tokens Layer*.
 2. Place all "Roof" graphics and size/position them to your needs. If you have [position locking](#configuration) on, you won't be able to adjust this later.
-  1. Enter **"Roof"** (capitalization counts!) into the first Bar 1 field of each "Roof" regardless of the layer you wish to show it on.
-  2. If the "Roof" graphic is to be revealed on the map layer (beneath character tokens), enter **"map"** into the second Bar 1 field.
+    1. Enter **"Roof"** (capitalization counts!) into the first Bar 1 field of each "Roof" regardless of the layer you wish to show it on.
+    2. If the "Roof" graphic is to be revealed on the map layer (beneath character tokens), enter **"map"** into the second Bar 1 field.
 3. Place a token somewhere near the "Roof" token(s). This can be a transparent graphic, a bush, whatever. Try to place it somewhere it will remain unobstructed by other tokens. This is your Anchor Token that will need to be selected when sending `!roof` commands.
-  1. Enter **"RoofAnchor"** (yes the R and A need to be capitalized) into the first Bar 1 field.
-  3. If creating a trap and wish to provide an effect in chat, enter either a [roll template](https://roll20.zendesk.com/hc/en-us/articles/360037257334-How-to-Make-Roll-Templates) or regular text in the token's GM Notes field.
-  2. If you are creating a trap effect (above) with regular text, you can give your effect a title in the second Bar 1 field. This title will be ignored when using a roll template.
+    1. Enter **"RoofAnchor"** (yes the R and A need to be capitalized) into the first Bar 1 field.
+    2. If creating a trap and wish to provide an effect in chat, enter either a [roll template](https://roll20.zendesk.com/hc/en-us/articles/360037257334-How-to-Make-Roll-Templates) or regular text in the token's GM Notes field.
+    3. If you are creating a trap effect (above) with regular text, you can give your effect a title in the second Bar 1 field. This title will be ignored when using a roll template.
 4. With all tokens from above selected, type `!roof link` in chat to link the tokens. The RoofAnchor token will be given a GM-only aura to distinguish it as your roof anchor (see [Configuration](#configuration) below).
-4. _Do not change the Bar 1 field values!_ These are used to identify the tokens.
+5. _Do not change the Bar 1 field values!_ These are used to identify the tokens.
 
 ## How to Use
 Once you have your Roof(s) setup, you select one or more RoofAnchor tokens and use the following command:
