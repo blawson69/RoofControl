@@ -2,7 +2,7 @@
 
 This [Roll20](http://roll20.net/) script is a roof "lifting" system to show/hide rooms or entire houses. Buildings with multiple roof graphics, or the roofs of multiple buildings, can be controlled by a single anchor token. You have the option to turn Dynamic Lighting and/or Advanced Fog of War on or off so you can have those features enabled only inside the building(s). You can optionally lock the position of the roof to prevent accidental moving or resizing.
 
-You can also use RoofControl to manually trigger traps. For instance, you can now hide a pit trap that gets revealed on the map layer (allowing the character tokens to remain visible) and display the trap effect in chat for players. This effect can be either a roll template or regular text, and will only be displayed when showing the Roof token(s).
+You can also use RoofControl to manually trigger traps. For instance, you can hide a pit trap that gets revealed on the map layer (allowing the character tokens to remain visible) and display the trap's effect in chat for players. This effect can be either a roll template or regular text, and will only be displayed when showing the Roof token(s).
 
 ## Commands
 * **!roof link**
@@ -39,7 +39,7 @@ By default, this command will only toggle Roof token visibility. If you want to 
 !roof flip fow-on dl-toggle
 ```
 
-In some instances you may be using macros with multiple API script calls and one of them uses target tokens, causing your RoofAnchor token to be de-selected. Or the RoofAnchor tokens you want to use may be spread out. In these cases, you can send the ID of the RoofAnchor token as the **last** parameter to the command. To affect multiple anchors, send all RoofAnchor token IDs as a comma-delimited list.
+In some instances you may be using macros with multiple API script calls and one of them uses target tokens, causing your RoofAnchor token to be de-selected. Or the RoofAnchor tokens you want to use may be spread out. In these cases, you can send the ID of the RoofAnchor token as the **last** parameter to the command. To affect multiple anchors, send all RoofAnchor token IDs as a comma-delimited list. Note: Sending token IDs will cause any selected tokens to be ignored.
 
 ```
 !roof flip @{selected|token_id}
@@ -48,7 +48,7 @@ In some instances you may be using macros with multiple API script calls and one
 !roof flip dl-toggle fow-off -LuplpqmFMHrVmmxeEtF,-Lv3wJInyuS8zzr-0NCj
 ```
 
-Note: Sending token IDs will cause any selected tokens to be ignored.
+If you have provided information in the GM notes, it will only be sent to chat when a Roof token is revealed. When they are hidden, this information will not be shown. This allows for a "reset" of the trap or whatever effect you have created.
 
 ## Configuration
 You can enter the Config Menu by sending `!roof config` in the chat. This dialog gives access to changing the following options:
