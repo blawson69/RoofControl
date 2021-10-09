@@ -1,12 +1,14 @@
 # RoofControl
 
-This [Roll20](http://roll20.net/) script is a roof "lifting" system to show/hide rooms or entire houses. Buildings with multiple roof graphics, or the roofs of multiple buildings, can be controlled by a single anchor token. You have the option to turn Dynamic Lighting and/or Advanced Fog of War on or off so you can have those features enabled only inside the building(s). You can optionally lock the position of the roof to prevent accidental moving or resizing.
+> **Notice:** This version _only_ supports Updated Dynamic Lighting. If your campaign is still using the legacy version, you must continue using the previous version.
+
+This [Roll20](http://roll20.net/) script is a roof "lifting" system to show/hide rooms or entire houses. Buildings with multiple roof graphics, or the roofs of multiple buildings, can be controlled by a single anchor token. You have the option to turn (Updated) Dynamic Lighting and/or Explorer Mode on or off so you can have those features enabled only inside the building(s). You can optionally lock the position of the roof to prevent accidental moving or resizing.
 
 You can also use RoofControl to manually trigger traps. For instance, you can hide a pit trap that gets revealed on the map layer (allowing the character tokens to remain visible) and display the trap's effect in chat for players. This effect can be either a roll template or regular text, and will only be displayed when showing the Roof token(s).
 
 ## Commands
 * **!roof link**
-* **!roof flip** [<_dynamic_lighting_control_> <_advanced_fog_of_war_control_>] <_anchor_token_id_>
+* **!roof flip** [<_dynamic_lighting_control_> <_explorer_mode_control_>] <_anchor_token_id_>
 * **!roof config**
 * **!roof help**
 
@@ -30,7 +32,7 @@ Once you have your Roof(s) setup, you select one or more RoofAnchor tokens and u
 !roof flip
 ```
 
-By default, this command will only toggle Roof token visibility. If you want to control Dynamic Lighting and/or Advanced Fog of War you can send additional parameters. There are three for each feature, all case insensitive, which are pretty self-explanatory. `dl-on` or `fow-on` turns on (or leaves on) Dynamic Lighting and Advanced Fog of War, respectively. Using `dl-off` or `fow-off` turns or leaves them off, and `dl-toggle` or `fow-toggle` flips them on if they're off and vice versa. You can use one or both parameters together in any order.
+By default, this command will only toggle Roof token visibility. If you want to control Dynamic Lighting and/or Explorer Mode you can send additional parameters. There are three for each feature, all case insensitive, which are pretty self-explanatory. `dl-on` or `fow-on` turns on (or leaves on) Dynamic Lighting and Explorer Mode, respectively. Using `dl-off` or `fow-off` turns or leaves them off, and `dl-toggle` or `fow-toggle` flips them on if they're off and vice versa. You can use one or both parameters together in any order.
 
 ```
 !roof flip dl-on

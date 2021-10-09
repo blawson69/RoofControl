@@ -12,11 +12,11 @@ Like this script? Become a patron:
 var RoofControl = RoofControl || (function () {
     'use strict';
 
-    var version = '2.0',
+    var version = '2.1',
     debugMode = false,
     RoofParts = {},
     styles = {
-        box:  'background-color: #fff; border: 1px solid #000; padding: 6px 8px; border-radius: 6px; margin-left: -40px; margin-right: 0px;',
+        box:  'background-color: #fff; border: 1px solid #000; padding: 6px 8px; border-radius: 6px;',
         title: 'padding: 0 0 6px 0; color: ##591209; font-size: 1.5em; font-weight: bold; font-variant: small-caps; font-family: "Times New Roman",Times,serif;',
         button: 'background-color: #000; border-width: 0px; border-radius: 5px; padding: 5px 8px; color: #fff; text-align: center;',
         textButton: 'background-color: transparent; border: none; padding: 0; color: #591209; text-decoration: underline;',
@@ -52,7 +52,8 @@ var RoofControl = RoofControl || (function () {
 
         if (firstTime) {
             var message = 'Thank you for using RoofControl!';
-            if (_.has(state, 'SIMPLEROOFCONTROL')) message += ' All of your SimpleRoofControl settings have been migrated.<br><div style=\'' + styles.buttonWrapper + '\'><a style="' + styles.button + '" href="!roof config">Open Config</a></div>';
+            if (_.has(state, 'SIMPLEROOFCONTROL')) message += ' All of your SimpleRoofControl settings have been migrated.';
+            message += '<br><div style=\'' + styles.buttonWrapper + '\'><a style="' + styles.button + '" href="!roof config">Open Config</a></div>';
             showDialog('Welcome', message);
         }
 
@@ -65,88 +66,31 @@ var RoofControl = RoofControl || (function () {
     },
 
     handleInput = function (msg) {
-		if (msg.type !== "api") {
-			return;
+		if (msg.type == "api" && msg.content.startsWith('!roof')) {
+            var parms = msg.content.split(/\s+/);
+            if (parms[1] && playerIsGM(msg.playerid)) {
+                switch (parms[1]) {
+                    case "config":
+                        showConfig(msg.content);
+                        break;
+                    case "link":
+                        commandLink(msg);
+                        break;
+                    case "flip":
+                        commandFlip(msg);
+                        break;
+                    case "help":
+                        showHelp();
+                        break;
+                    case "unlock":
+                        unlockRoofTokens(msg.selected);
+                        break;
+                    case "lock":
+                        lockRoofTokens(msg.selected);
+                        break;
+                }
+            }
 		}
-
-		switch (msg.content.split(/\s+/).shift()) {
-            case "!roof":
-                var parms = msg.content.split(/\s+/);
-                if (parms[1] && playerIsGM(msg.playerid)) {
-                    switch (parms[1]) {
-                        case "config":
-                            showConfig(msg.content);
-                            break;
-                        case "link":
-                            commandLink(msg);
-                            break;
-                        case "flip":
-                            commandFlip(msg);
-                            break;
-                        case "help":
-                            showHelp();
-                            break;
-                        case "unlock":
-                            unlockRoofTokens(msg.selected);
-                            break;
-                        case "lock":
-                            lockRoofTokens(msg.selected);
-                            break;
-                    }
-                }
-                break;
-
-			case "!ShowHideRoof":
-                if (!playerIsGM(msg.playerid) && state['RoofControl'].gmOnly) {
-                    showDialog('', 'You do not have permission to use that command.', msg.who);
-                    return;
-                }
-
-                var anchorTokens = [],
-                    msgparts = msg.content.split(/\s+/),
-                    regex = /on|off|toggle/i;
-
-                if (msg.selected) anchorTokens = msg.selected.map(s => getObj(s._type, s._id));
-                if (_.last(msgparts).startsWith('-')) {
-                    anchorTokens = []; //ignore selected tokens
-                    var anchorIDs = msg.content.replace(/!ShowHideRoof\s*(?:on|off|toggle)?\s+/i, '').split(/\s*,\s*/);
-                    _.each(anchorIDs, function (id) {
-                        var token = getObj('graphic', id);
-                        if (token) anchorTokens.push(token);
-                    });
-                }
-
-                if (_.size(anchorTokens) > 0) {
-                    _.each(anchorTokens, function (anchor) {
-                        if (typeof anchor !== 'undefined' && typeof anchor.get !== 'undefined') {
-                            var roofID = (state['SIMPLEROOFCONTROL'].allowLabels) ? anchor.get('bar1_value') : anchor.get('name'),
-                                oRoof = getObj('graphic', roofID);
-                            if (oRoof) {
-                                var dest = (state['SIMPLEROOFCONTROL'].allowLabels) ? oRoof.get('bar1_max').toLowerCase() : oRoof.get('bar1_value').toLowerCase();
-                                if (dest !== 'map') dest = 'objects';
-                                oRoof.set({layer: ((oRoof.get('layer') !== 'walls') ? 'walls' : dest)});
-                                if (oRoof.get('layer') === 'objects') toFront(oRoof);
-
-                                if (regex.test(msgparts[1])) {
-                                    msgparts[1] = msgparts[1].toLowerCase();
-                                    var oPage = getObj("page", anchor.get('pageid'));
-                                    if (msgparts[1] === 'toggle') {
-                                        oPage.set({showlighting: (oPage.get('showlighting') === false ? true : false) });
-                                        if (state['RoofControl'].useFoW) oPage.set({showdarkness: (oPage.get('adv_fow_enabled') === false ? true : false) });
-                                    } else {
-                                        oPage.set({showlighting: (msgparts[1] === 'on' ? true : false) });
-                                        if (state['RoofControl'].useFoW) oPage.set({showdarkness: (msgparts[1] === 'on' ? true : false) });
-                                    }
-                                }
-                            } else {
-                                showDialog('Error', 'Missing Roof token for ' + (state['SIMPLEROOFCONTROL'].allowLabels ? '"' + anchor.get('name') + '"' : 'ID ' + anchor.get('id')) + '!');
-                            }
-                        } else showDialog('Error', 'Invalid token!');
-                    });
-                } else {
-                    showDialog('Error', 'No tokens selected!');
-                }
-		} // End switch
     },
 
     commandLink = function (msg) {
@@ -215,12 +159,13 @@ var RoofControl = RoofControl || (function () {
             if (msg.content.match(/(dl|fow)\-(on|off|toggle)/i) !== null) {
                 var page = getObj("page", anchor_tokens[0].get('pageid'));
                 var msgparts = msg.content.toLowerCase().split(/\s+/), dl_opt, fow_opt;
+
                 _.each(msgparts, function (cmd) {
-                    if (cmd.startsWith('dl-')) dl_opt = (cmd == 'dl-on' ? true : (cmd == 'dl-off' ? false : !page.get('showlighting')));
-                    if (cmd.startsWith('fow-')) fow_opt = (cmd == 'fow-on' ? true : (cmd == 'fow-off' ? false : !page.get('adv_fow_enabled')));
+                    if (cmd.startsWith('dl-')) dl_opt = (cmd == 'dl-on' ? true : (cmd == 'dl-off' ? false : !page.get('dynamic_lighting_enabled')));
+                    if (cmd.startsWith('fow-')) fow_opt = (cmd == 'fow-on' ? true : (cmd == 'fow-off' ? false : !page.get('explorer_mode')));
                 });
-                if (typeof dl_opt != 'undefined') page.set({showlighting: dl_opt });
-                if (typeof fow_opt != 'undefined') page.set({showdarkness: fow_opt });
+                if (typeof dl_opt != 'undefined') page.set({dynamic_lighting_enabled: dl_opt });
+                if (typeof fow_opt != 'undefined') page.set({explorer_mode: fow_opt });
             }
 
             _.each(anchor_tokens, function (anchor) {
@@ -264,6 +209,7 @@ var RoofControl = RoofControl || (function () {
             if (parts[0] == 'pos-toggle') state['RoofControl'].lockPos = !state['RoofControl'].lockPos;
             if (parts[0] == 'fow-toggle') state['RoofControl'].useFoW = !state['RoofControl'].useFoW;
             if (parts[0] == 'gm-toggle') state['RoofControl'].gmOnly = !state['RoofControl'].gmOnly;
+            if (parts[0] == 'dl-toggle') state['RoofControl'].updated_dl = !state['RoofControl'].updated_dl;
             if (parts[0] == 'color' && parts[1] != '') {
                 if (parts[1].match(/^([0-9a-fA-F]{3}){1,2}$/i) !== null) state['RoofControl'].anchorColor = '#' + parts[1];
                 else color_err = true;
@@ -296,16 +242,16 @@ var RoofControl = RoofControl || (function () {
         message = 'To prepare a Roof for use with the script follow the directions below:<ol>';
         message += '<li>Verify you\'re on the <i>Objects & Tokens Layer</i>.</li>';
         message += '<li>Place all "Roof" graphics and size/position them to your needs.' + (state['RoofControl'].lockPos ? ' Once linked, your Roof tokens will be locked to prevent accidental repositioning or resizing.' : ' If you wish to lock Roof token positions, you must enable it in the config menu <i>before</i> linking your tokens.') + '</li>';
-        message += '<li>Enter **"Roof"** into the first Bar 1 field.</li>';
-        message += '<li>Enter **"map"** into the second Bar 1 field to send to the map layer.</li>';
+        message += '<li>Enter **"Roof"** into the first Bar 1 field of each Roof token.</li>';
+        message += '<li>Enter **"map"** into the second Bar 1 field to send any Roof to the map layer.</li>';
         message += '<li>Place a "RoofAnchor" token somewhere it will remain unobstructed by other tokens.</li>';
         message += '<li>Enter **"RoofAnchor"** into the first Bar 1 field.</li>';
         message += '<li>Enter trap or other effect into the GM Notes field, if applicable.</li>';
         message += '<li>Enter a title for a non- roll template trap effect into the second Bar 1 field.</li>';
         message += '<li>Select all tokens and type <span style=\'' + styles.code + '\'>!roof link</span> in chat.';
         message += '<li>If necessary, name your Roof and RoofAnchor tokens however you wish.</li>';
-        message += '</ol>Do this for each "roof" needed.<br><br>Send <span style=\'' + styles.code + '\'>!roof flip</span> in chat with the RoofAnchor selected to show/hide the Roof token(s).<br><br>';
-        message += 'Use <span style=\'' + styles.code + '\'>!roof flip [dl|fow]-[on|off|toggle]</span> to affect Dynamic Lighting and Advanced Fog of War.';
+        message += '</ol>Send <span style=\'' + styles.code + '\'>!roof flip</span> in chat with the RoofAnchor selected to show/hide the Roof token(s).<br><br>';
+        message += 'Use <span style=\'' + styles.code + '\'>!roof flip [dl|fow]-[on|off|toggle]</span> to affect Dynamic Lighting and Explorer Mode.';
         message += '<hr>See the <a style="' + styles.textButton + '" href="https://github.com/blawson69/RoofControl">documentation</a> for complete instructions.<br>';
         message += '<div style=\'' + styles.buttonWrapper + '\'><a style="' + styles.button + '" href="!roof config">Config Menu</a></div>';
         showDialog('Help Menu', message);
