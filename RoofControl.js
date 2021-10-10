@@ -162,7 +162,7 @@ var RoofControl = RoofControl || (function () {
 
                 _.each(msgparts, function (cmd) {
                     if (cmd.startsWith('dl-')) dl_opt = (cmd == 'dl-on' ? true : (cmd == 'dl-off' ? false : !page.get('dynamic_lighting_enabled')));
-                    if (cmd.startsWith('fow-')) fow_opt = (cmd == 'fow-on' ? true : (cmd == 'fow-off' ? false : !page.get('explorer_mode')));
+                    if (cmd.startsWith('em-')) fow_opt = (cmd == 'em-on' ? true : (cmd == 'em-off' ? false : !page.get('explorer_mode')));
                 });
                 if (typeof dl_opt != 'undefined') page.set({dynamic_lighting_enabled: dl_opt });
                 if (typeof fow_opt != 'undefined') page.set({explorer_mode: fow_opt });
@@ -207,7 +207,7 @@ var RoofControl = RoofControl || (function () {
             var parts = x.trim().split(/\s*\|\s*/i);
             if (parts[0] == 'aura-toggle') state['RoofControl'].useAura2 = !state['RoofControl'].useAura2;
             if (parts[0] == 'pos-toggle') state['RoofControl'].lockPos = !state['RoofControl'].lockPos;
-            if (parts[0] == 'fow-toggle') state['RoofControl'].useFoW = !state['RoofControl'].useFoW;
+            if (parts[0] == 'em-toggle') state['RoofControl'].useFoW = !state['RoofControl'].useFoW;
             if (parts[0] == 'gm-toggle') state['RoofControl'].gmOnly = !state['RoofControl'].gmOnly;
             if (parts[0] == 'dl-toggle') state['RoofControl'].updated_dl = !state['RoofControl'].updated_dl;
             if (parts[0] == 'color' && parts[1] != '') {

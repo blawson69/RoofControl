@@ -32,13 +32,13 @@ Once you have your Roof(s) setup, you select one or more RoofAnchor tokens and u
 !roof flip
 ```
 
-By default, this command will only toggle Roof token visibility. If you want to control Dynamic Lighting and/or Explorer Mode you can send additional parameters. There are three for each feature, all case insensitive, which are pretty self-explanatory. `dl-on` or `fow-on` turns on (or leaves on) Dynamic Lighting and Explorer Mode, respectively. Using `dl-off` or `fow-off` turns or leaves them off, and `dl-toggle` or `fow-toggle` flips them on if they're off and vice versa. You can use one or both parameters together in any order.
+By default, this command will only toggle Roof token visibility. If you want to control Dynamic Lighting and/or Explorer Mode you can send additional parameters. There are three for each feature, all case insensitive, which are pretty self-explanatory. `dl-on` or `em-on` turns on (or leaves on) Dynamic Lighting and Explorer Mode, respectively. Using `dl-off` or `em-off` turns or leaves them off, and `dl-toggle` or `em-toggle` flips them on if they're off and vice versa. You can use one or both parameters together in any order.
 
 ```
 !roof flip dl-on
-!roof flip dl-off fow-off
-!roof flip fow-toggle
-!roof flip fow-on dl-toggle
+!roof flip dl-off em-off
+!roof flip em-toggle
+!roof flip em-on dl-toggle
 ```
 
 In some instances you may be using macros with multiple API script calls and one of them uses target tokens, causing your RoofAnchor token to be de-selected. Or the RoofAnchor tokens you want to use may be spread out. In these cases, you can send the ID of the RoofAnchor token as the **last** parameter to the command. To affect multiple anchors, send all RoofAnchor token IDs as a comma-delimited list. Note: Sending token IDs will cause any selected tokens to be ignored.
@@ -47,7 +47,7 @@ In some instances you may be using macros with multiple API script calls and one
 !roof flip @{selected|token_id}
 !roof flip dl-on @{target|RoofAnchor|token_id}
 !roof flip -LVo7yDRijRbyShF5OeO
-!roof flip dl-toggle fow-off -LuplpqmFMHrVmmxeEtF,-Lv3wJInyuS8zzr-0NCj
+!roof flip dl-toggle em-off -LuplpqmFMHrVmmxeEtF,-Lv3wJInyuS8zzr-0NCj
 ```
 
 If you have provided information in the GM notes, it will only be sent to chat when a Roof token is revealed. When they are hidden, this information will not be shown. This allows for a "reset" of the trap or whatever effect you have created.
